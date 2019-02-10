@@ -1,8 +1,18 @@
 export const createProject = (project) => {
-    return (dispatch, getState) => {
+    return (dispatch, getState, { getFirebase, getFirestore }) => {
         // make ascync call to db
-
-        // dispatch
-        dispatch({ type: 'CREATE_PROJECT', project})
+        const firestore = getFirestore();
+        firestore.collection('projects').add({
+            ...project,
+            authorFirstName: 'Yazid',
+            authorLastName: 'Ismail',
+            authorId: '12345',
+            createdAt: new Date()
+        }).then(() => {
+            // dispatch
+            dispatch({ type: 'CREATE_PROJECT', project })
+        }).catch((err) => {
+            dispatch({ type: 'CREATE_PROJECT_ERROR', err })
+        })
     }
 }
